@@ -6,10 +6,10 @@ import java.util.LinkedList;
 
 
 public class SudokuGrid {
-    private int[][] grid;
-    private Deque<CellAction> undoStack;
-    private Deque<CellAction> redoStack;
-    private ActionQueue actionQueue;
+    private final int[][] grid;
+    private final Deque<CellAction> undoStack;
+    private final Deque<CellAction> redoStack;
+    private final ActionQueue actionQueue;
 
     public SudokuGrid() {
         grid = new int[6][6];

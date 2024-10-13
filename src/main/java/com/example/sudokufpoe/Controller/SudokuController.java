@@ -10,8 +10,20 @@ import java.util.Queue;
 public class SudokuController {
     @FXML
     private TextField[][] cells;
-    private SudokuGrid model;
+    private final SudokuGrid model;
     private ArrayList<TextField> cellList;
+    @FXML
+    private TextField cell_0_0, cell_0_1, cell_0_2, cell_0_3, cell_0_4, cell_0_5;
+    @FXML
+    private TextField cell_1_0, cell_1_1, cell_1_2, cell_1_3, cell_1_4, cell_1_5;
+    @FXML
+    private TextField cell_2_0, cell_2_1, cell_2_2, cell_2_3, cell_2_4, cell_2_5;
+    @FXML
+    private TextField cell_3_0, cell_3_1, cell_3_2, cell_3_3, cell_3_4, cell_3_5;
+    @FXML
+    private TextField cell_4_0, cell_4_1, cell_4_2, cell_4_3, cell_4_4, cell_4_5;
+    @FXML
+    private TextField cell_5_0, cell_5_1, cell_5_2, cell_5_3, cell_5_4, cell_5_5;
 
     public SudokuController() {
         model = new SudokuGrid();
@@ -20,14 +32,22 @@ public class SudokuController {
 
     @FXML
     public void initialize() {
-        cells = new TextField[6][6];
-        // Inicializar y agregar TextFields al GridPane basado en FXML
+        cells = new TextField[][] {
+                {cell_0_0, cell_0_1, cell_0_2, cell_0_3, cell_0_4, cell_0_5},
+                {cell_1_0, cell_1_1, cell_1_2, cell_1_3, cell_1_4, cell_1_5},
+                {cell_2_0, cell_2_1, cell_2_2, cell_2_3, cell_2_4, cell_2_5},
+                {cell_3_0, cell_3_1, cell_3_2, cell_3_3, cell_3_4, cell_3_5},
+                {cell_4_0, cell_4_1, cell_4_2, cell_4_3, cell_4_4, cell_4_5},
+                {cell_5_0, cell_5_1, cell_5_2, cell_5_3, cell_5_4, cell_5_5}
+        };
 
         for (int row = 0; row < 6; row++) {
             for (int col = 0; col < 6; col++) {
                 TextField cell = new TextField(); // O agrega el TextField del FXML
-                cell.setOnMouseClicked(e -> onCellClick(row, col));
-                cell.setOnKeyTyped(e -> handleKeyPress(e.getCharacter(), row, col));
+                int finalRow = row;
+                int finalCol = col;
+                cell.setOnMouseClicked(e -> onCellClick(finalRow, finalCol));
+                cell.setOnKeyTyped(e -> handleKeyPress(e.getCharacter(), finalRow, finalCol));
                 cells[row][col] = cell;
                 cellList.add(cell);
             }

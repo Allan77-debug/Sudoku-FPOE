@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="447.0" prefWidth="698.0" spacing="20.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.sudokufpoe.HelloController">
+<VBox alignment="CENTER" prefHeight="447.0" prefWidth="698.0" spacing="20.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.sudokufpoe.Controller.SudokuController">
   <children>
     <AnchorPane prefHeight="442.0" prefWidth="678.0">
       <children>
@@ -32,42 +32,42 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           </rowConstraints>
           <children>
-            <TextField prefHeight="61.0" prefWidth="62.0" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="1" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="2" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="3" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="4" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="5" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.rowIndex="1" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.rowIndex="2" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="5" GridPane.rowIndex="2" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.rowIndex="3" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="5" GridPane.rowIndex="3" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.rowIndex="4" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="5" GridPane.rowIndex="4" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.rowIndex="5" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="4" GridPane.rowIndex="5" />
-            <TextField prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="5" GridPane.rowIndex="5" />
+            <TextField fx:id="cell_0_0" prefHeight="61.0" prefWidth="62.0" />
+            <TextField fx:id="cell_0_1" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="1" />
+            <TextField fx:id="cell_0_2" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="2" />
+            <TextField fx:id="cell_0_3" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="3" />
+            <TextField fx:id="cell_0_4" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="4" />
+            <TextField fx:id="cell_0_5" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="5" />
+            <TextField fx:id="cell_1_0" prefHeight="61.0" prefWidth="62.0" GridPane.rowIndex="1" />
+            <TextField fx:id="cell_1_1" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="cell_1_2" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <TextField fx:id="cell_1_3" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <TextField fx:id="cell_1_4" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            <TextField fx:id="cell_1_5" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+            <TextField fx:id="cell_2_0" prefHeight="61.0" prefWidth="62.0" GridPane.rowIndex="2" />
+            <TextField fx:id="cell_2_1" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="cell_2_2" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <TextField fx:id="cell_2_3" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <TextField fx:id="cell_2_4" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+            <TextField fx:id="cell_2_5" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+            <TextField fx:id="cell_3_0" prefHeight="61.0" prefWidth="62.0" GridPane.rowIndex="3" />
+            <TextField fx:id="cell_3_1" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="cell_3_2" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <TextField fx:id="cell_3_3" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+            <TextField fx:id="cell_3_4" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+            <TextField fx:id="cell_3_5" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+            <TextField fx:id="cell_4_0" prefHeight="61.0" prefWidth="62.0" GridPane.rowIndex="4" />
+            <TextField fx:id="cell_4_1" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="cell_4_2" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <TextField fx:id="cell_4_3" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+            <TextField fx:id="cell_4_4" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+            <TextField fx:id="cell_4_5" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+            <TextField fx:id="cell_5_0" prefHeight="61.0" prefWidth="62.0" GridPane.rowIndex="5" />
+            <TextField fx:id="cell_5_1" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <TextField fx:id="cell_5_2" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <TextField fx:id="cell_5_3" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+            <TextField fx:id="cell_5_4" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+            <TextField fx:id="cell_5_5" prefHeight="61.0" prefWidth="62.0" GridPane.columnIndex="5" GridPane.rowIndex="5" />
           </children>
         </GridPane>
             <Button layoutX="324.0" layoutY="402.0" mnemonicParsing="false" text="Ayuda" />
