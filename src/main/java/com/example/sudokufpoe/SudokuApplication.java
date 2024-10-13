@@ -2,26 +2,23 @@ package com.example.sudokufpoe;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class SudokuApplication extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        // Cargar el archivo FXML
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("com/example/sudokufpoe/hello-view.fxml"));
-        Parent root = loader.load();
-
-        // Configurar la escena
-        Scene scene = new Scene(root);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Sudoku 6x6");
-        primaryStage.show();
+    public void start(Stage stage) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(SudokuApplication.class.getResource("hello-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 800, 800);
+        stage.setTitle("Sudoku");
+        stage.setScene(scene);
+        stage.show();
     }
 
     public static void main(String[] args) {
-        launch(args);
+        launch();
     }
 }
