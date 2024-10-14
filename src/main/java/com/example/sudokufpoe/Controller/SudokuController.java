@@ -86,21 +86,38 @@ public class SudokuController {
     }
 
     private void handleKeyPress(String key, int row, int col) {
-        // Limpiar el carácter para manejar solo el primer carácter ingresado
-        key = key.trim();
+        key = cleanInput(key);
+        if (isValidNumber(key)) {
+            int number = Integer.parseInt(key);
+            updateModelAndView(row, col, number);
+        } else {
+            handleInvalidInput(key);
+        }
+    }
 
-        // Verificar si el carácter ingresado es un número válido del 1 al 6
+    private String cleanInput(String key) {
+        return key.trim();
+    }
+
+    private boolean isValidNumber(String key) {
         try {
             int number = Integer.parseInt(key);
-            if (number >= 1 && number <= 6) {
-                model.setNumber(row, col, number);
-                updateCellView(row, col, number); // Actualizar la vista para reflejar el cambio
-            } else {
-                System.out.println("Número fuera de rango. Ingresa un número entre 1 y 6.");
-            }
+            return number >= 1 && number <= 6;
         } catch (NumberFormatException e) {
-            // Ignorar cualquier entrada que no sea un número válido
+            return false;
+        }
+    }
+
+    private void updateModelAndView(int row, int col, int number) {
+        model.setNumber(row, col, number);
+        updateCellView(row, col, number);
+    }
+
+    private void handleInvalidInput(String key) {
+        if (key.isEmpty() || !key.matches("[1-6]")) {
             System.out.println("Entrada inválida. Solo se permiten números del 1 al 6.");
+        } else {
+            System.out.println("Número fuera de rango. Ingresa un número entre 1 y 6.");
         }
     }
 

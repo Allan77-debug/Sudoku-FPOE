@@ -27,31 +27,37 @@ public class SudokuGrid {
         }
     }
 
-    // Método para verificar si un número es válido en una posición específica
     public boolean isValid(int row, int col, int number) {
-        // Verificar que el número esté entre 1 y 6
-        if (number < 1 || number > 6) return false;
+        return isNumberInRange(number) && !isNumberInRow(row, number) && !isNumberInColumn(col, number) && !isNumberInBlock(row, col, number);
+    }
 
-        // Verificar que el número no se repita en la fila
+    private boolean isNumberInRange(int number) {
+        return number >= 1 && number <= 6;
+    }
+
+    private boolean isNumberInRow(int row, int number) {
         for (int i = 0; i < 6; i++) {
-            if (grid[row][i] == number) return false;
+            if (grid[row][i] == number) return true;
         }
+        return false;
+    }
 
-        // Verificar que el número no se repita en la columna
+    private boolean isNumberInColumn(int col, int number) {
         for (int i = 0; i < 6; i++) {
-            if (grid[i][col] == number) return false;
+            if (grid[i][col] == number) return true;
         }
+        return false;
+    }
 
-        // Verificar que el número no se repita en el bloque 2x3
+    private boolean isNumberInBlock(int row, int col, int number) {
         int startRow = (row / 2) * 2;
         int startCol = (col / 3) * 3;
         for (int i = startRow; i < startRow + 2; i++) {
             for (int j = startCol; j < startCol + 3; j++) {
-                if (grid[i][j] == number) return false;
+                if (grid[i][j] == number) return true;
             }
         }
-
-        return true;
+        return false;
     }
 
     public void setNumber(int row, int col, int number) {
