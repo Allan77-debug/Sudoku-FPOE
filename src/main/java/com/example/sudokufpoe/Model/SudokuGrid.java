@@ -1,6 +1,5 @@
 package com.example.sudokufpoe.Model;
 import java.util.Queue;
-import java.util.Stack;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -56,12 +55,13 @@ public class SudokuGrid {
     }
 
     public void setNumber(int row, int col, int number) {
-        if (isValid(row, col, number)) {
+        if (number >= 1 && number <= 6 && isValid(row, col, number)) {
             undoStack.push(new CellAction(row, col, grid[row][col])); // Guardar acción previa
             resetRedoStack(); // Limpiar la pila de rehacer cuando hay una nueva acción
             grid[row][col] = number;
             actionQueue.addAction("Ingresado " + number + " en [" + row + "," + col + "]"); // Registro de acción
-
+        } else {
+            System.out.println("El número no es válido para esta posición o está fuera del rango.");
         }
     }
 
@@ -71,7 +71,6 @@ public class SudokuGrid {
             redoStack.push(new CellAction(lastAction.row, lastAction.col, grid[lastAction.row][lastAction.col]));
             grid[lastAction.row][lastAction.col] = lastAction.previousNumber;
             actionQueue.addAction("Deshacer en [" + lastAction.row + "," + lastAction.col + "]"); // Registro de acción
-
         }
     }
 
@@ -81,7 +80,6 @@ public class SudokuGrid {
             undoStack.push(new CellAction(redoAction.row, redoAction.col, grid[redoAction.row][redoAction.col]));
             grid[redoAction.row][redoAction.col] = redoAction.previousNumber;
             actionQueue.addAction("Rehacer en [" + redoAction.row + "," + redoAction.col + "]"); // Registro de acción
-
         }
     }
 
@@ -95,7 +93,6 @@ public class SudokuGrid {
             resetRedoStack(); // Limpiar la pila de rehacer
             grid[row][col] = 0; // Eliminar el número
             actionQueue.addAction("Eliminado " + grid[row][col] + " de [" + row + "," + col + "]"); // Registro de acción
-
         }
     }
 

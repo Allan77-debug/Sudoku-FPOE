@@ -43,15 +43,30 @@ public class SudokuController {
 
         for (int row = 0; row < 6; row++) {
             for (int col = 0; col < 6; col++) {
-                TextField cell = new TextField(); // O agrega el TextField del FXML
-                int finalRow = row;
-                int finalCol = col;
-                cell.setOnMouseClicked(e -> onCellClick(finalRow, finalCol));
-                cell.setOnKeyTyped(e -> handleKeyPress(e.getCharacter(), finalRow, finalCol));
-                cells[row][col] = cell;
-                cellList.add(cell);
+                final int finalRow = row;
+                final int finalCol = col;
+
+                // Asegurar que cada campo acepte solo números del 1 al 6
+                cells[row][col].setOnKeyReleased(e -> {
+                    String text = cells[finalRow][finalCol].getText();
+                    if (text.length() > 1 || !text.matches("[1-6]?")) {
+                        cells[finalRow][finalCol].setText(""); // Vaciar si la entrada es inválida
+                    }
+                });
+
+                cells[row][col].setOnMouseClicked(e -> onCellClick(finalRow, finalCol));
             }
         }
+    }
+
+    @FXML
+    private void handleUndo() {
+        undo();
+    }
+
+    @FXML
+    private void handleRedo() {
+        redo();
     }
 
     private void updateCellView(int row, int col, int number) {
@@ -71,15 +86,21 @@ public class SudokuController {
     }
 
     private void handleKeyPress(String key, int row, int col) {
+        // Limpiar el carácter para manejar solo el primer carácter ingresado
+        key = key.trim();
+
+        // Verificar si el carácter ingresado es un número válido del 1 al 6
         try {
             int number = Integer.parseInt(key);
             if (number >= 1 && number <= 6) {
                 model.setNumber(row, col, number);
-                cells[row][col].setText(String.valueOf(number));
+                updateCellView(row, col, number); // Actualizar la vista para reflejar el cambio
+            } else {
+                System.out.println("Número fuera de rango. Ingresa un número entre 1 y 6.");
             }
         } catch (NumberFormatException e) {
-            // Si el carácter no es un número válido
-            System.out.println("Número inválido ingresado.");
+            // Ignorar cualquier entrada que no sea un número válido
+            System.out.println("Entrada inválida. Solo se permiten números del 1 al 6.");
         }
     }
 
