@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class ActionQueue {
-    private Queue<String> actionQueue;
+    private final Queue<String> actionQueue;
 
     public ActionQueue() {
         actionQueue = new LinkedList<>();

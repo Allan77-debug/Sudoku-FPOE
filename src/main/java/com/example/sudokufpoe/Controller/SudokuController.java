@@ -13,9 +13,8 @@ import java.util.Queue;
  */
 public class SudokuController {
     @FXML
-    private TextField[][] cells;
     private final SudokuGrid model;
-    private ArrayList<TextField> cellList;
+    private final ArrayList<TextField> cellList;
     @FXML
     private TextField cell_0_0, cell_0_1, cell_0_2, cell_0_3, cell_0_4, cell_0_5;
     @FXML
@@ -43,31 +42,36 @@ public class SudokuController {
      */
     @FXML
     public void initialize() {
-        cells = new TextField[][] {
-                {cell_0_0, cell_0_1, cell_0_2, cell_0_3, cell_0_4, cell_0_5},
-                {cell_1_0, cell_1_1, cell_1_2, cell_1_3, cell_1_4, cell_1_5},
-                {cell_2_0, cell_2_1, cell_2_2, cell_2_3, cell_2_4, cell_2_5},
-                {cell_3_0, cell_3_1, cell_3_2, cell_3_3, cell_3_4, cell_3_5},
-                {cell_4_0, cell_4_1, cell_4_2, cell_4_3, cell_4_4, cell_4_5},
-                {cell_5_0, cell_5_1, cell_5_2, cell_5_3, cell_5_4, cell_5_5}
-        };
 
-        for (int row = 0; row < 6; row++) {
-            for (int col = 0; col < 6; col++) {
-                final int finalRow = row;
-                final int finalCol = col;
+        cellList.add(cell_0_0); cellList.add(cell_0_1); cellList.add(cell_0_2); cellList.add(cell_0_3); cellList.add(cell_0_4); cellList.add(cell_0_5);
+        cellList.add(cell_1_0); cellList.add(cell_1_1); cellList.add(cell_1_2); cellList.add(cell_1_3); cellList.add(cell_1_4); cellList.add(cell_1_5);
+        cellList.add(cell_2_0); cellList.add(cell_2_1); cellList.add(cell_2_2); cellList.add(cell_2_3); cellList.add(cell_2_4); cellList.add(cell_2_5);
+        cellList.add(cell_3_0); cellList.add(cell_3_1); cellList.add(cell_3_2); cellList.add(cell_3_3); cellList.add(cell_3_4); cellList.add(cell_3_5);
+        cellList.add(cell_4_0); cellList.add(cell_4_1); cellList.add(cell_4_2); cellList.add(cell_4_3); cellList.add(cell_4_4); cellList.add(cell_4_5);
+        cellList.add(cell_5_0); cellList.add(cell_5_1); cellList.add(cell_5_2); cellList.add(cell_5_3); cellList.add(cell_5_4); cellList.add(cell_5_5);
 
-                // Ensure each field accepts only numbers from 1 to 6
-                cells[row][col].setOnKeyReleased(e -> {
-                    String text = cells[finalRow][finalCol].getText();
-                    if (text.length() > 1 || !text.matches("[1-6]?")) {
-                        cells[finalRow][finalCol].setText(""); // Clear if input is invalid
-                    }
-                });
+        for (int i = 0; i < cellList.size(); i++) {
+            final int index = i;
+            cellList.get(i).setOnKeyReleased(e -> {
+                String text = cellList.get(index).getText();
+                if (text.length() > 1 || !text.matches("[1-6]?")) {
+                    cellList.get(index).setText("");
+                }
+            });
 
-                cells[row][col].setOnMouseClicked(e -> onCellClick(finalRow, finalCol));
-            }
+            cellList.get(i).setOnMouseClicked(e -> onCellClick(index));
         }
+    }
+
+    /**
+     * Handles cell click and editing.
+     *
+     * @param index the index of the clicked cell
+     */
+    public void onCellClick(int index) {
+        TextField selectedCell = cellList.get(index);
+        selectedCell.requestFocus();
+        selectedCell.setOnKeyTyped(event -> handleKeyPress(event.getCharacter(), index));
     }
 
     /**
@@ -87,47 +91,18 @@ public class SudokuController {
     }
 
     /**
-     * Updates the view of a cell.
-     *
-     * @param row    the row of the cell
-     * @param col    the column of the cell
-     * @param number the number to set in the cell
-     */
-    private void updateCellView(int row, int col, int number) {
-        TextField cell = cells[row][col];
-        if (number == 0) {
-            cell.clear(); // Visually clear the cell if the number is 0
-        } else {
-            cell.setText(String.valueOf(number)); // Display the entered number
-        }
-    }
-
-    /**
-     * Handles cell click and editing.
-     *
-     * @param row the row of the clicked cell
-     * @param col the column of the clicked cell
-     */
-    public void onCellClick(int row, int col) {
-        TextField selectedCell = cells[row][col];
-        selectedCell.requestFocus(); // Select the cell
-        selectedCell.setOnKeyTyped(event -> handleKeyPress(event.getCharacter(), row, col));
-    }
-
-    /**
      * Handles key press events.
      *
      * @param key the key pressed
-     * @param row the row of the cell
-     * @param col the column of the cell
+     * @param index the index of the cell
      */
-    private void handleKeyPress(String key, int row, int col) {
+    private void handleKeyPress(String key, int index) {
         key = cleanInput(key);
-        if (InputValidator.isValidNumber(key)) {
+        if (key.matches("[1-6]")) {
             int number = Integer.parseInt(key);
+            int row = index / 6;
+            int col = index % 6;
             updateModelAndView(row, col, number);
-        } else {
-            InputValidator.handleInvalidInput(key);
         }
     }
 
@@ -150,7 +125,9 @@ public class SudokuController {
      */
     private void updateModelAndView(int row, int col, int number) {
         model.setNumber(row, col, number);
-        updateCellView(row, col, number);
+        int index = row * 6 + col;
+        TextField cell = cellList.get(index);
+        cell.setText(String.valueOf(number));
     }
 
     /**
@@ -161,7 +138,8 @@ public class SudokuController {
      */
     public void clearCell(int row, int col) {
         model.clearNumber(row, col);
-        cells[row][col].setText("");
+        int index = row * 6 + col;
+        cellList.get(index).setText("");
     }
 
     /**
@@ -184,10 +162,15 @@ public class SudokuController {
      * Refreshes the view to reflect the current state of the model.
      */
     private void refreshView() {
-        for (int row = 0; row < 6; row++) {
-            for (int col = 0; col < 6; col++) {
-                int number = model.getNumber(row, col);
-                updateCellView(row, col, number);
+        for (int i = 0; i < 36; i++) {
+            int row = i / 6;
+            int col = i % 6;
+            int number = model.getNumber(row, col);
+            TextField cell = cellList.get(i);
+            if (number == 0) {
+                cell.clear();
+            } else {
+                cell.setText(String.valueOf(number));
             }
         }
     }
