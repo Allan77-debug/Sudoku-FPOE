@@ -1,6 +1,8 @@
 package com.example.sudokufpoe.Model;
 
 import com.example.sudokufpoe.Util.InputValidator;
+import javafx.scene.control.TextField;
+
 import java.util.Queue;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -14,15 +16,20 @@ public class SudokuGrid {
     private final Deque<CellAction> undoStack;
     private final Deque<CellAction> redoStack;
     private final ActionQueue actionQueue;
+    private final SudokuNumberValidation numberValidator;
 
     /**
      * Constructs a new SudokuGrid.
      */
     public SudokuGrid() {
         grid = new ArrayList<>();
+        SudokuNumberGenerator numberGenerator = new SudokuNumberGenerator();
+        numberValidator =  new SudokuNumberValidation();
         for (int i = 0; i < 36; i++) {
             grid.add(0);
         }
+        numberGenerator.generateValidNumbers(grid);
+
         undoStack = new LinkedList<>();
         redoStack = new LinkedList<>();
         actionQueue = new ActionQueue();
@@ -56,58 +63,7 @@ public class SudokuGrid {
      */
     public boolean isValid(int row, int col, int number) {
         int index = row * 6 + col;
-        return isValidNumber(number) && !isNumberInRow(row, number) && !isNumberInColumn(col, number) && !isNumberInBlock(index, number);
-    }
-
-    /**
-     * Checks if a number is already present in the specified row.
-     *
-     * @param row the row to check
-     * @param number the number to check
-     * @return true if the number is present, false otherwise
-     */
-    private boolean isNumberInRow(int row, int number) {
-        for (int col = 0; col < 6; col++) {
-            int index = row * 6 + col;
-            if (grid.get(index) == number) return true;
-        }
-        return false;
-    }
-
-    /**
-     * Checks if a number is already present in the specified column.
-     *
-     * @param col the column to check
-     * @param number the number to check
-     * @return true if the number is present, false otherwise
-     */
-    private boolean isNumberInColumn(int col, int number) {
-        for (int row = 0; row < 6; row++) {
-            int index = row * 6 + col;
-            if (grid.get(index) == number) return true;
-        }
-        return false;
-    }
-
-    /**
-     * Checks if a number is already present in the 2x3 block containing the specified cell.
-     *
-     * @param index the index of the cell
-     * @param number the number to check
-     * @return true if the number is present, false otherwise
-     */
-    private boolean isNumberInBlock(int index, int number) {
-        int row = index / 6;
-        int col = index % 6;
-        int startRow = (row / 2) * 2;
-        int startCol = (col / 3) * 3;
-        for (int i = startRow; i < startRow + 2; i++) {
-            for (int j = startCol; j < startCol + 3; j++) {
-                int blockIndex = i * 6 + j;
-                if (grid.get(blockIndex) == number) return true;
-            }
-        }
-        return false;
+        return (numberValidator.isValidNumber(number) && !numberValidator.isNumberInRow(row, number, grid) && !numberValidator.isNumberInColumn(col, number, grid) && !numberValidator.isNumberInBlock(index, number, grid));
     }
 
     /**
@@ -119,7 +75,7 @@ public class SudokuGrid {
      */
     public void setNumber(int row, int col, int number) {
         int index = row * 6 + col;
-        if (isValidNumber(number) && isValid(row, col, number)) {
+        if (numberValidator.isValidNumber(number) && isValid(row, col, number)) {
             savePreviousAction(index);
             resetRedoStack();
             updateGrid(index, number);
@@ -127,16 +83,6 @@ public class SudokuGrid {
         } else {
             InputValidator.handleInvalidInput(String.valueOf(number));
         }
-    }
-
-    /**
-     * Checks if a number is within the valid range (1-6).
-     *
-     * @param number the number to check
-     * @return true if the number is within range, false otherwise
-     */
-    private boolean isValidNumber(int number) {
-        return number >= 1 && number <= 6;
     }
 
     /**
@@ -269,7 +215,7 @@ public class SudokuGrid {
      */
     public void clearNumber(int row, int col) {
         int index = row * 6 + col;
-        if (isCellNotEmpty(index)) {
+        if (numberValidator.isCellNotEmpty(index, grid)) {
             savePreviousAction(index);
             resetRedoStack();
             clearGridCell(index);
@@ -277,15 +223,6 @@ public class SudokuGrid {
         }
     }
 
-    /**
-     * Checks if a cell is not empty.
-     *
-     * @param index the index of the cell
-     * @return true if the cell is not empty, false otherwise
-     */
-    private boolean isCellNotEmpty(int index) {
-        return grid.get(index) != 0;
-    }
 
     /**
      * Clears the specified cell in the grid.
