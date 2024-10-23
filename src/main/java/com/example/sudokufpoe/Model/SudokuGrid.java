@@ -61,7 +61,7 @@ public class SudokuGrid {
      * @param number the number to check
      * @return true if the number is valid, false otherwise
      */
-    public boolean isValid(int row, int col, int number) {
+    public boolean eisValid(int row, int col, int number) {
         int index = row * 6 + col;
         return (numberValidator.isValidNumber(number) && !numberValidator.isNumberInRow(row, number, grid) && !numberValidator.isNumberInColumn(col, number, grid) && !numberValidator.isNumberInBlock(index, number, grid));
     }
@@ -75,7 +75,7 @@ public class SudokuGrid {
      */
     public void setNumber(int row, int col, int number) {
         int index = row * 6 + col;
-        if (numberValidator.isValidNumber(number) && isValid(row, col, number)) {
+        if (numberValidator.isValidNumber(number) && numberValidator.isValid(row, col, number, grid)) {
             savePreviousAction(index);
             resetRedoStack();
             updateGrid(index, number);
