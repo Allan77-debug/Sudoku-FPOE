@@ -1,7 +1,7 @@
 package com.example.sudokufpoe.Controller;
 
+import com.example.sudokufpoe.Model.SudokuNumberGenerator;
 import com.example.sudokufpoe.Model.SudokuGrid;
-import com.example.sudokufpoe.Util.InputValidator;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -28,6 +28,7 @@ public class SudokuController {
     @FXML
     private TextField cell_5_0, cell_5_1, cell_5_2, cell_5_3, cell_5_4, cell_5_5;
 
+
     /**
      * Constructor for SudokuController.
      */
@@ -49,6 +50,8 @@ public class SudokuController {
         cellList.add(cell_3_0); cellList.add(cell_3_1); cellList.add(cell_3_2); cellList.add(cell_3_3); cellList.add(cell_3_4); cellList.add(cell_3_5);
         cellList.add(cell_4_0); cellList.add(cell_4_1); cellList.add(cell_4_2); cellList.add(cell_4_3); cellList.add(cell_4_4); cellList.add(cell_4_5);
         cellList.add(cell_5_0); cellList.add(cell_5_1); cellList.add(cell_5_2); cellList.add(cell_5_3); cellList.add(cell_5_4); cellList.add(cell_5_5);
+
+        fillWithRandomNumbers();
 
         for (int i = 0; i < cellList.size(); i++) {
             final int index = i;
@@ -103,6 +106,17 @@ public class SudokuController {
             int row = index / 6;
             int col = index % 6;
             updateModelAndView(row, col, number);
+        }
+    }
+
+    private void fillWithRandomNumbers(){
+        for (int row = 0; row < 6; row++) {
+            for (int col = 0; col < 6; col++) {
+                int index = row * 6 + col; // Calcula el índice de la celda
+                if (model.getNumber(row, col) != 0) {
+                    cellList.get(index).setText(String.valueOf(model.getNumber(row, col)));
+                }
+            }
         }
     }
 
