@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class SudokuNumberGenerator {
     private final Random random = new Random();
-    private final int totalNumbersToGenerate = 19;
+    private final int totalNumbersToGenerate = 12;
     private final SudokuNumberValidation numberValidator;
 
     public SudokuNumberGenerator(){
@@ -17,7 +17,7 @@ public class SudokuNumberGenerator {
     }
 
     public void generateValidNumbers(ArrayList<Integer> cellList) {
-        int[][] subGridLimits = new int[][] {
+        int[][] subGridLimits = new int[][]{
                 {0, 1}, {2, 3}, {4, 5}
         };
 
@@ -25,7 +25,7 @@ public class SudokuNumberGenerator {
 
         for (int rowGroup = 0; rowGroup < 3; rowGroup++) {
             for (int colGroup = 0; colGroup < 2; colGroup++) {
-                int numbersInSubGrid = calculateNumbersToGenerate(totalGeneratedNumbers);
+                int numbersInSubGrid = 2;
                 totalGeneratedNumbers += numbersInSubGrid;
 
                 fillSubGridWithNumbers(cellList, subGridLimits[rowGroup], colGroup * 3, numbersInSubGrid);
@@ -36,16 +36,6 @@ public class SudokuNumberGenerator {
             }
         }
         System.out.println("total" + totalGeneratedNumbers);
-    }
-
-    private int calculateNumbersToGenerate(int currentTotalGenerated) {
-        int numbersInSubGrid = random.nextInt(3) + 2;
-
-        if (currentTotalGenerated + numbersInSubGrid > totalNumbersToGenerate) {
-            numbersInSubGrid = totalNumbersToGenerate - currentTotalGenerated;
-        }
-
-        return numbersInSubGrid;
     }
 
     private void fillSubGridWithNumbers(ArrayList<Integer> cellList, int[] rows, int startCol, int numbersToGenerate) {
