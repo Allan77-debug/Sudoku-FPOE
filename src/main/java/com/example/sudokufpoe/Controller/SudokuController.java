@@ -101,6 +101,7 @@ public class SudokuController {
      */
     private void handleKeyPress(String key, int index) {
         key = cleanInput(key);
+        System.out.println(key + " " + key.matches("[1-6]"));
         if (key.matches("[1-6]")) {
             int number = Integer.parseInt(key);
             int row = index / 6;
@@ -139,9 +140,50 @@ public class SudokuController {
      */
     private void updateModelAndView(int row, int col, int number) {
         model.setNumber(row, col, number);
+        boolean isValid = model.isValid(row,col,number);
         int index = row * 6 + col;
         TextField cell = cellList.get(index);
+        highlightField(cell, "white");
+        if(!isValid) {
+            int conflictCellIndex = model.getCellConflictIndex(row,col,number);
+            System.out.println(conflictCellIndex);
+            highlightPathBetweenCells(index, conflictCellIndex);
+        }
+
         cell.setText(String.valueOf(number));
+    }
+
+    /**
+     * Highlights all cells from the selected cell to the conflict cell.
+     *
+     * @param selectedIndex the index of the selected cell
+     * @param conflictIndex the index of the conflict cell
+     */
+    private void highlightPathBetweenCells(int selectedIndex, int conflictIndex) {
+        int selectedRow = selectedIndex / 6;
+        int selectedCol = selectedIndex % 6;
+        int conflictRow = conflictIndex / 6;
+        int conflictCol = conflictIndex % 6;
+
+        // Highlight cells in the same row
+        if (selectedRow == conflictRow) {
+            for (int col = Math.min(selectedCol, conflictCol); col <= Math.max(selectedCol, conflictCol); col++) {
+                int index = selectedRow * 6 + col;
+                highlightField(cellList.get(index), "lightcoral");
+            }
+        }
+        // Highlight cells in the same column
+        else if (selectedCol == conflictCol) {
+            for (int row = Math.min(selectedRow, conflictRow); row <= Math.max(selectedRow, conflictRow); row++) {
+                int index = row * 6 + selectedCol;
+                highlightField(cellList.get(index), "lightcoral");
+            }
+        }
+    }
+
+
+    private void highlightField(TextField txt, String color) {
+        txt.setStyle("-fx-background-color: " + color + ";");
     }
 
     /**

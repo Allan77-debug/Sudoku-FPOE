@@ -13,6 +13,8 @@ import java.util.ArrayList;
  */
 public class SudokuGrid {
     private final ArrayList<Integer> grid; // Reemplazamos la matriz con ArrayList
+    private final ArrayList<ArrayList<Integer>> matriz;
+    private final ArrayList<ArrayList<Integer>> solution;
     private final Deque<CellAction> undoStack;
     private final Deque<CellAction> redoStack;
     private final ActionQueue actionQueue;
@@ -23,6 +25,15 @@ public class SudokuGrid {
      */
     public SudokuGrid() {
         grid = new ArrayList<>();
+        matriz = new ArrayList<>();
+        solution = new ArrayList<>();
+
+        initMatrix(matriz);
+        initMatrix(solution);
+
+        printGrid(matriz);
+        printGrid(solution);
+
         SudokuNumberGenerator numberGenerator = new SudokuNumberGenerator();
         numberValidator =  new SudokuNumberValidation();
         for (int i = 0; i < 36; i++) {
@@ -33,6 +44,18 @@ public class SudokuGrid {
         undoStack = new LinkedList<>();
         redoStack = new LinkedList<>();
         actionQueue = new ActionQueue();
+    }
+
+    private ArrayList<ArrayList<Integer>> initMatrix(ArrayList<ArrayList<Integer>> matrix) {
+        for (int i = 0; i < 6; i++) {
+            ArrayList<Integer> fila = new ArrayList<>();
+            for (int j = 0; j < 6; j++) {
+                fila.add(0);
+            }
+            matrix.add(fila);
+        }
+
+        return matrix;
     }
 
     /**
@@ -63,6 +86,7 @@ public class SudokuGrid {
      */
     public boolean isValid(int row, int col, int number) {
         int index = row * 6 + col;
+        System.out.println("isValid func, isValid:  " + numberValidator.isValidNumber(number) + " in row: " + !numberValidator.isNumberInRow(row, number, grid) + " in Col: " + !numberValidator.isNumberInColumn(col, number, grid) + " in block: " + !numberValidator.isNumberInBlock(index, number, grid));
         return (numberValidator.isValidNumber(number) && !numberValidator.isNumberInRow(row, number, grid) && !numberValidator.isNumberInColumn(col, number, grid) && !numberValidator.isNumberInBlock(index, number, grid));
     }
 
@@ -75,6 +99,8 @@ public class SudokuGrid {
      */
     public void setNumber(int row, int col, int number) {
         int index = row * 6 + col;
+        boolean isValid = isValid(row,col, number);
+        System.out.println("Is valid "+  isValid);
         if (numberValidator.isValidNumber(number) && isValid(row, col, number)) {
             savePreviousAction(index);
             resetRedoStack();
@@ -83,6 +109,19 @@ public class SudokuGrid {
         } else {
             InputValidator.handleInvalidInput(String.valueOf(number));
         }
+    }
+
+    public int getCellConflictIndex(int row, int col, int number){
+        int index = row * 6 + col;
+        int conflictInTheSameBlock = numberValidator.numberAlreadyInBlock(index,number, grid);
+        int conflictInTheColumn = numberValidator.numberAlreadyInBlock(index,number, grid);
+        int conflictInTheRow = numberValidator.numberAlreadyInBlock(index,number, grid);
+
+        System.out.println("same block: "+conflictInTheSameBlock + " col: " + conflictInTheColumn +  " row: " + conflictInTheRow);
+
+        if(conflictInTheSameBlock != -1) return conflictInTheSameBlock;
+        if(conflictInTheColumn != -1) return conflictInTheColumn;
+        return conflictInTheRow;
     }
 
     /**
@@ -182,6 +221,21 @@ public class SudokuGrid {
      */
     private void restoreRedoState(CellAction action) {
         grid.set(action.index, action.previousNumber);
+    }
+
+    /**
+     * Prints the current state of the Sudoku grid to the console in a formatted way.
+     */
+    public void printGrid(ArrayList<ArrayList<Integer>> matrix) {
+        System.out.println("Matriz formateada:");
+        for (ArrayList<Integer> fila : matrix) {
+            System.out.print("| ");
+            for (Integer elemento : fila) {
+                System.out.print(elemento + " ");
+            }
+            System.out.println("|"); // Cerrar la fila con una barra vertical
+        }
+
     }
 
     /**

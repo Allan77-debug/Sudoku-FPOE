@@ -32,14 +32,40 @@ public class SudokuNumberValidation {
      *
      * @param row the row to check
      * @param number the number to check
+     * @return the index of the other number in the row if the number is present, -1 otherwise
+     */
+    public int numberAlreadyInInRow(int row, int number,ArrayList<Integer> grid) {
+        for (int col = 0; col < 6; col++) {
+            int index = row * 6 + col;
+            if (grid.get(index) == number) return index;
+        }
+        return -1;
+    }
+
+    /**
+     * Checks if a number is already present in the specified row.
+     *
+     * @param row the row to check
+     * @param number the number to check
      * @return true if the number is present, false otherwise
      */
     public boolean isNumberInRow(int row, int number,ArrayList<Integer> grid) {
-        for (int col = 0; col < 6; col++) {
+        return numberAlreadyInInRow(row, number, grid) != -1;
+    }
+
+    /**
+     * Checks if a number is already present in the specified column.
+     *
+     * @param col the column to check
+     * @param number the number to check
+     * @return the index of the other number in the column if the number is present, -1 otherwise
+     */
+    public int numberAlreadyInColumn(int col, int number,ArrayList<Integer> grid) {
+        for (int row = 0; row < 6; row++) {
             int index = row * 6 + col;
-            if (grid.get(index) == number) return true;
+            if (grid.get(index).equals(number)) return index;
         }
-        return false;
+        return -1;
     }
 
     /**
@@ -50,11 +76,28 @@ public class SudokuNumberValidation {
      * @return true if the number is present, false otherwise
      */
     public boolean isNumberInColumn(int col, int number,ArrayList<Integer> grid) {
-        for (int row = 0; row < 6; row++) {
-            int index = row * 6 + col;
-            if (grid.get(index) == number) return true;
+        return numberAlreadyInColumn(col, number, grid) != -1;
+    }
+
+    /**
+     * Checks if a number is already present in the 2x3 block containing the specified cell.
+     *
+     * @param index the index of the cell
+     * @param number the number to check
+     * @return the number index if the number is present, -1 otherwise
+     */
+    public int numberAlreadyInBlock(int index, int number, ArrayList<Integer> grid) {
+        int row = index / 6;
+        int col = index % 6;
+        int startRow = (row / 2) * 2;
+        int startCol = (col / 3) * 3;
+        for (int i = startRow; i < startRow + 2; i++) {
+            for (int j = startCol; j < startCol + 3; j++) {
+                int blockIndex = i * 6 + j;
+                if (grid.get(blockIndex).equals(number)) return blockIndex;
+            }
         }
-        return false;
+        return -1;
     }
 
 
@@ -66,17 +109,7 @@ public class SudokuNumberValidation {
      * @return true if the number is present, false otherwise
      */
     public boolean isNumberInBlock(int index, int number, ArrayList<Integer> grid) {
-        int row = index / 6;
-        int col = index % 6;
-        int startRow = (row / 2) * 2;
-        int startCol = (col / 3) * 3;
-        for (int i = startRow; i < startRow + 2; i++) {
-            for (int j = startCol; j < startCol + 3; j++) {
-                int blockIndex = i * 6 + j;
-                if (grid.get(blockIndex) == number) return false;
-            }
-        }
-        return true;
+        return numberAlreadyInBlock(index, number, grid) != -1;
     }
 
 
