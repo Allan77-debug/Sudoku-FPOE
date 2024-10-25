@@ -32,6 +32,8 @@ public class SudokuGrid {
         numberGenerator.generateSudokuSolution(solution);
         numberGenerator.fillEmptyMatrixWithTwoNumbersPerBlock(solution, grid);
 
+        printGrid(solution);
+
         numberValidator =  new SudokuNumberValidation();
 
         undoStack = new LinkedList<>();
@@ -39,6 +41,12 @@ public class SudokuGrid {
         actionQueue = new ActionQueue();
     }
 
+    /**
+     * Initializes a 6x6 matrix with all elements set to 0.
+     *
+     * @param matrix the matrix to initialize
+     * @return the initialized matrix
+     */
     private ArrayList<ArrayList<Integer>> initMatrix(ArrayList<ArrayList<Integer>> matrix) {
         for (int i = 0; i < 6; i++) {
             ArrayList<Integer> fila = new ArrayList<>();
@@ -51,20 +59,33 @@ public class SudokuGrid {
         return matrix;
     }
 
+    public boolean isGameComplete() {
+        for (int row = 0; row < 6; row++) {
+            for (int col = 0; col < 6; col++) {
+                if (grid.get(row).get(col) == 0 || !grid.get(row).get(col).equals(solution.get(row).get(col))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     /**
      * Represents an action performed on a cell.
      */
     private static class CellAction {
-        int index, previousNumber;
+        int row, col, previousNumber;
 
         /**
          * Constructs a new CellAction.
          *
-         * @param index the index of the cell
+         * @param row the row of the cell
+         * @param col the column of the cell
          * @param previousNumber the previous number in the cell
          */
-        CellAction(int index, int previousNumber) {
-            this.index = index;
+        CellAction(int row, int col, int previousNumber) {
+            this.row = row;
+            this.col = col;
             this.previousNumber = previousNumber;
         }
     }
@@ -108,9 +129,8 @@ public class SudokuGrid {
      * @param number the number to set
      */
     public void setNumber(int row, int col, int number) {
-        int index = row * 6 + col;
         if (numberValidator.isValidNumber(number) && isValid(row, col, number)) {
-            savePreviousAction(index);
+            savePreviousAction(row, col);
             resetRedoStack();
             updateGrid(row, col, number);
             logAction("Ingresado " + number + " en [" + row + "," + col + "]");
@@ -122,11 +142,14 @@ public class SudokuGrid {
     /**
      * Saves the previous action for undo functionality.
      *
-     * @param index the index of the cell
+     * @param row the row of the cell
+     * @param col the column of the cell
      */
-    private void savePreviousAction(int index) {
-        //undoStack.push(new CellAction(index, grid.get(index)));
+    private void savePreviousAction(int row, int col) {
+        int previousNumber = grid.get(row).get(col);
+        undoStack.push(new CellAction(row, col, previousNumber));
     }
+
 
     /**
      * Updates the grid with the specified number.
@@ -160,6 +183,18 @@ public class SudokuGrid {
         }
     }
 
+    /**
+     * Provides assistance to the player by filling an empty cell with its correct value from the solution grid.
+     * This method finds an empty cell (value 0) within the current game grid, retrieves the correct value
+     * from the solution grid, places it in the game grid, and then returns the position and value of the cell.
+     * The player has a limited number of attempts to use this feature, which decrements each time the method is called.
+     *
+     * @return a map with the following key-value pairs:
+     *         - "row": the row index of the cell where help was provided
+     *         - "col": the column index of the cell where help was provided
+     *         - "value": the correct solution value placed in the cell
+     *         Returns null if there are no attempts left or if the grid has no empty cells.
+     */
     public Map<String, Integer> help() {
         if (helpAttemps <= 0) return null;
 
@@ -223,7 +258,7 @@ public class SudokuGrid {
      * @param action the action to restore
      */
     private void restorePreviousState(CellAction action) {
-        //grid.set(action.index, action.previousNumber);
+        grid.get(action.row).set(action.col, action.previousNumber);
     }
 
     /**
@@ -232,9 +267,7 @@ public class SudokuGrid {
      * @param action the action to log
      */
     private void logUndoAction(CellAction action) {
-        int row = action.index / 6;
-        int col = action.index % 6;
-        actionQueue.addAction("Deshacer en [" + row + "," + col + "]");
+        actionQueue.addAction("Deshacer en [" + action.row + "," + action.col + "]");
     }
 
     /**
@@ -243,7 +276,7 @@ public class SudokuGrid {
      * @param action the action to save
      */
     private void saveUndoAction(CellAction action) {
-        //undoStack.push(new CellAction(action.index, grid.get(action.index)));
+        undoStack.push(new CellAction(action.row,action.col, grid.get(action.row).get(action.col)));
     }
 
     /**
@@ -252,7 +285,7 @@ public class SudokuGrid {
      * @param action the action to restore
      */
     private void restoreRedoState(CellAction action) {
-        // grid.set(action.index, action.previousNumber);
+         grid.get(action.row).set(action.col, action.previousNumber);
     }
 
     /**
@@ -276,9 +309,7 @@ public class SudokuGrid {
      * @param action the action to log
      */
     private void logRedoAction(CellAction action) {
-        int row = action.index / 6;
-        int col = action.index % 6;
-        actionQueue.addAction("Rehacer en [" + row + "," + col + "]");
+        actionQueue.addAction("Rehacer en [" + action.row + "," + action.col + "]");
     }
 
     /**
@@ -299,9 +330,8 @@ public class SudokuGrid {
      * @param col the column of the cell
      */
     public void clearNumber(int row, int col) {
-        int index = row * 6 + col;
         if (numberValidator.isCellNotEmpty(row, col, grid)) {
-            savePreviousAction(index);
+            savePreviousAction(row, col);
             resetRedoStack();
             clearGridCell(row, col);
             logClearAction(row, col);
