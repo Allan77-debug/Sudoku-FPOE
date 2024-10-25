@@ -15,6 +15,7 @@ public class SudokuGrid {
     private final Deque<CellAction> redoStack;
     private final ActionQueue actionQueue;
     private final SudokuNumberValidation numberValidator;
+    private int helpAttemps = 6;
 
     /**
      * Constructs a new SudokuGrid.
@@ -158,6 +159,41 @@ public class SudokuGrid {
             logUndoAction(lastAction);
         }
     }
+
+    public Map<String, Integer> help() {
+        if (helpAttemps <= 0) return null;
+
+        helpAttemps--;
+
+        List<int[]> emptyCells = new ArrayList<>();
+
+        for (int row = 0; row < 6; row++) {
+            for (int col = 0; col < 6; col++) {
+                if (grid.get(row).get(col) == 0) {
+                    emptyCells.add(new int[]{row, col});
+                }
+            }
+        }
+
+        if (emptyCells.isEmpty()) return null;
+
+        Random random = new Random();
+        int[] chosenCell = emptyCells.get(random.nextInt(emptyCells.size()));
+
+        int row = chosenCell[0];
+        int col = chosenCell[1];
+        int solutionValue = solution.get(row).get(col);
+
+        grid.get(row).set(col, solutionValue);
+
+        Map<String, Integer> result = new HashMap<>();
+        result.put("row", row);
+        result.put("col", col);
+        result.put("value", solutionValue);
+
+        return result;
+    }
+
 
     /**
      * Redoes the last undone action.

@@ -2,7 +2,6 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -10,11 +9,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="447.0" prefWidth="698.0" spacing="20.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.sudokufpoe.Controller.SudokuController">
+<VBox alignment="CENTER" maxHeight="573.0" maxWidth="678.0" minHeight="500.0" minWidth="678.0" prefHeight="573.0" prefWidth="678.0" spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.sudokufpoe.Controller.SudokuController">
   <children>
-    <AnchorPane prefHeight="442.0" prefWidth="678.0">
+    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="573.0" prefWidth="678.0" style="-fx-background-color: #F3F3E0;">
       <children>
-        <GridPane fx:id="gridPane" layoutX="167.0" layoutY="94.0" prefHeight="291.0" prefWidth="363.0" style="-fx-grid-lines-visible: true;">
+        <GridPane fx:id="gridPane" layoutX="157.0" layoutY="121.0" prefHeight="291.0" prefWidth="363.0" style="-fx-grid-lines-visible: true; -fx-background-color: white;">
           <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -32,14 +31,15 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           </rowConstraints>
         </GridPane>
-            <Button layoutX="100.0" layoutY="402.0" mnemonicParsing="false" text="Deshacer" onAction="#handleUndo"/>
-            <Button layoutX="200.0" layoutY="402.0" mnemonicParsing="false" text="Rehacer" onAction="#handleRedo"/>
-            <Button layoutX="324.0" layoutY="402.0" mnemonicParsing="false" text="Ayuda" />
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="244.0" layoutY="14.0" prefHeight="62.0" prefWidth="208.0" text="Sudoku">
+            <Button layoutX="178.0" layoutY="473.0" mnemonicParsing="false" onAction="#handleUndo" style="-fx-background-color: black;" text="Deshacer" textFill="WHITE" />
+            <Button layoutX="309.0" layoutY="473.0" mnemonicParsing="false" onAction="#handleRedo" style="-fx-background-color: #608BC1;" text="Rehacer" textFill="WHITE" />
+            <Button layoutX="426.0" layoutY="473.0" mnemonicParsing="false" onAction="#handleHelp" style="-fx-background-color: #41B3A2;" text="Ayuda" textFill="WHITE" />
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="235.0" layoutY="44.0" prefHeight="62.0" prefWidth="208.0" style="-fx-font-weight: 700;" text="Sudoku" textFill="#133e87">
                <font>
                   <Font size="42.0" />
                </font>
             </Label>
+            <Label fx:id="sudokuHelper" alignment="CENTER" contentDisplay="CENTER" layoutX="231.0" layoutY="425.0" prefHeight="18.0" prefWidth="215.0" />
       </children>
     </AnchorPane>
   </children>

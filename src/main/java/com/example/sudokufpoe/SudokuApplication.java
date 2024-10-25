@@ -1,5 +1,6 @@
 package com.example.sudokufpoe;
 
+import com.example.sudokufpoe.View.SudokuStage;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,11 +12,7 @@ public class SudokuApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(SudokuApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 800, 800);
-        stage.setTitle("Sudoku");
-        stage.setScene(scene);
-        stage.show();
+        SudokuStage.getInstance();
     }
 
     public static void main(String[] args) {

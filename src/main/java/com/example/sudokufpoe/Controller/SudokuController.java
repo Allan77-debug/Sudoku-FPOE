@@ -3,6 +3,7 @@ package com.example.sudokufpoe.Controller;
 import com.example.sudokufpoe.Model.SudokuNumberGenerator;
 import com.example.sudokufpoe.Model.SudokuGrid;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
@@ -17,6 +18,8 @@ public class SudokuController {
 
     @FXML
     private GridPane gridPane; // Referencia al GridPane del FXML
+    @FXML
+    private Label sudokuHelper;
     @FXML
     private final SudokuGrid model;
     private final ArrayList<ArrayList<TextField>> cellGrid;
@@ -201,24 +204,37 @@ public class SudokuController {
      * @param isValid indica si la celda es válida o no (para aplicar el color de texto correspondiente)
      */
     private void highlightBlock(int row, int col, String color, boolean isValid) {
-        // Calculamos la fila y columna iniciales del bloque 2x3 que contiene la celda seleccionada
-        int blockStartRow = (row / 2) * 2; // Multiplicamos por 2 para obtener la fila superior del bloque
-        int blockStartCol = (col / 3) * 3; // Multiplicamos por 3 para obtener la columna izquierda del bloque
+        int blockStartRow = (row / 2) * 2;
+        int blockStartCol = (col / 3) * 3;
 
-        // Recorremos las celdas del bloque 2x3
         for (int i = blockStartRow; i < blockStartRow + 2; i++) {
             for (int j = blockStartCol; j < blockStartCol + 3; j++) {
                 highlightField(cellGrid.get(i).get(j), color, "black");
             }
         }
 
-        // Si no es válido, resaltar la celda seleccionada en rojo
         if (!isValid) highlightField(cellGrid.get(row).get(col), color, "red");
 
     }
 
     private void highlightField(TextField txt, String color, String textColor) {
         txt.setStyle("-fx-background-color: " + color + "; " + "-fx-text-fill: " + textColor + ";");
+    }
+
+    @FXML
+    private void handleHelp(){
+        Map<String, Integer> hintNum = model.help();
+        if(hintNum == null) {
+            sudokuHelper.setStyle("-fx-text-fill: #FFA500;");
+            sudokuHelper.setText("No tienes mas ayudas");
+            return;
+        };
+
+        int row = hintNum.get("row");
+        int col = hintNum.get("col");
+        int value = hintNum.get("value");
+
+        cellGrid.get(row).get(col).setPromptText(String.valueOf(value));
     }
 
     /**
