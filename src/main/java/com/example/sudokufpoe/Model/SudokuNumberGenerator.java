@@ -11,7 +11,6 @@ public class SudokuNumberGenerator {
         solveSudoku(matrix, 0, 0);
     }
 
-    // Método para rellenar una matriz con dos números aleatorios de cada bloque 2x3 de una matriz solucionada
     public void fillEmptyMatrixWithTwoNumbersPerBlock(ArrayList<ArrayList<Integer>> solvedMatrix, ArrayList<ArrayList<Integer>> emptyMatrix) {
         for (int row = 0; row < 6; row += 2) { // Recorre las subcuadrículas de 2x3
             for (int col = 0; col < 6; col += 3) {

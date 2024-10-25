@@ -123,6 +123,7 @@ public class SudokuController {
             // Allow only valid letters and revert to oldValue if the input is invalid
             highlightRow(row, col, "white", true);
             highlightCol(row, col,"white", true);
+            highlightBlock(row, col, "white", true);
             if(!newValue.matches("[1-6]")) return;
             int number = Integer.parseInt(newValue);
             updateModelAndView(row, col,number);
@@ -153,7 +154,7 @@ public class SudokuController {
 
         TextField cell = cellGrid.get(row).get(col);
 
-        if(!isValid) highlightPathBetweenCells(row, col, isValidMap.get("isNumberInRow"), isValidMap.get("isNumberInColumn"));
+        if(!isValid) highlightPathBetweenCells(row, col, isValidMap.get("isNumberInRow"), isValidMap.get("isNumberInColumn"), isValidMap.get("isNumberInBlock"));
 
         cell.setText(String.valueOf(number));
     }
@@ -164,10 +165,12 @@ public class SudokuController {
      * @param selectedRow la fila de la celda seleccionada
      * @param selectedCol la columna de la celda seleccionada
      */
-    private void highlightPathBetweenCells(int selectedRow, int selectedCol, boolean isNumberInRow, boolean isNumberInCol) {
+    private void highlightPathBetweenCells(int selectedRow, int selectedCol, boolean isNumberInRow, boolean isNumberInCol, boolean isNumberInBlock) {
         if(isNumberInRow) highlightRow(selectedRow, selectedCol,"#fbe5e5", !isNumberInRow);
 
         if(isNumberInCol) highlightCol(selectedRow, selectedCol,"#fbe5e5", !isNumberInCol);
+
+       if (isNumberInBlock) highlightBlock(selectedRow, selectedCol, "#fbe5e5", !isNumberInBlock);
 
     }
 
@@ -184,6 +187,31 @@ public class SudokuController {
             highlightField(cellGrid.get(i).get(col),color, "black");
         }
         if(!isValid) highlightField(cellGrid.get(row).get(col),color, "red");
+    }
+
+    /**
+     * Resalta todas las celdas en el bloque 3x2 que contiene la celda seleccionada.
+     *
+     * @param row la fila de la celda seleccionada
+     * @param col la columna de la celda seleccionada
+     * @param color el color de fondo para resaltar
+     * @param isValid indica si la celda es válida o no (para aplicar el color de texto correspondiente)
+     */
+    private void highlightBlock(int row, int col, String color, boolean isValid) {
+        // Calculamos la fila y columna iniciales del bloque 2x3 que contiene la celda seleccionada
+        int blockStartRow = (row / 2) * 2; // Multiplicamos por 2 para obtener la fila superior del bloque
+        int blockStartCol = (col / 3) * 3; // Multiplicamos por 3 para obtener la columna izquierda del bloque
+
+        // Recorremos las celdas del bloque 2x3
+        for (int i = blockStartRow; i < blockStartRow + 2; i++) {
+            for (int j = blockStartCol; j < blockStartCol + 3; j++) {
+                highlightField(cellGrid.get(i).get(j), color, "black");
+            }
+        }
+
+        // Si no es válido, resaltar la celda seleccionada en rojo
+        if (!isValid) highlightField(cellGrid.get(row).get(col), color, "red");
+
     }
 
     private void highlightField(TextField txt, String color, String textColor) {
