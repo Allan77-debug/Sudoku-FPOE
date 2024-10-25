@@ -15,8 +15,8 @@ public class SudokuStage extends Stage{
         Scene scene = new Scene(root);
         setScene(scene);
         setTitle("Sudoku");
-        //Image icon = new Image(String.valueOf(getClass().getResource("/eisc/miniproyecto1repaso/favico.png")));
-        //this.getIcons().add(icon);
+        Image icon = new Image(String.valueOf(getClass().getResource("/com/example/images/favico.png")));
+        this.getIcons().add(icon);
         setResizable(false);
         show();
     }

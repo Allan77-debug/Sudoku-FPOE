@@ -1,12 +1,7 @@
 package com.example.sudokufpoe.Model;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SudokuNumberValidation {
-
-
 
     /**
      * Checks if a number is within the valid range (1-6).

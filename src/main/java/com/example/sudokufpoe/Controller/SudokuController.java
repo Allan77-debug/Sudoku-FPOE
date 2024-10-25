@@ -166,10 +166,13 @@ public class SudokuController {
     }
 
     /**
-     * Resalta todas las celdas entre la celda seleccionada y la celda en conflicto.
+     * Highlights all the cells in the specified column and row in red if a conflict is detected.
      *
-     * @param selectedRow la fila de la celda seleccionada
-     * @param selectedCol la columna de la celda seleccionada
+     * @param selectedRow the row of the selected cell
+     * @param selectedCol the column of the selected cell
+     * @param isNumberInRow indicates if there is a number conflict in the row
+     * @param isNumberInCol indicates if there is a number conflict in the column
+     * @param isNumberInBlock indicates if there is a number conflict in the block
      */
     private void highlightPathBetweenCells(int selectedRow, int selectedCol, boolean isNumberInRow, boolean isNumberInCol, boolean isNumberInBlock) {
         if(isNumberInRow) highlightRow(selectedRow, selectedCol,"#fbe5e5", !isNumberInRow);
@@ -180,6 +183,14 @@ public class SudokuController {
 
     }
 
+    /**
+     * Highlights all cells in the specified row. If the selected cell is invalid, it is highlighted in red.
+     *
+     * @param row the row to highlight
+     * @param col the column of the selected cell
+     * @param color the background color to apply to the row
+     * @param isValid whether the selected cell is valid
+     */
     private void highlightRow(int row, int col,  String color, boolean isValid){
 
         for (int i = 0; i < 6; i++) {
@@ -188,6 +199,14 @@ public class SudokuController {
         if(!isValid) highlightField(cellGrid.get(row).get(col),color, "red");
     }
 
+    /**
+     * Highlights all cells in the specified column. If the selected cell is invalid, it is highlighted in red.
+     *
+     * @param row the row of the selected cell
+     * @param col the column to highlight
+     * @param color the background color to apply to the column
+     * @param isValid whether the selected cell is valid
+     */
     private void highlightCol(int row, int col, String color, boolean isValid){
         for (int i = 0; i < 6; i++) {
             highlightField(cellGrid.get(i).get(col),color, "black");
@@ -196,12 +215,12 @@ public class SudokuController {
     }
 
     /**
-     * Resalta todas las celdas en el bloque 3x2 que contiene la celda seleccionada.
+     * Highlights a specified 3x2 block of cells. If the selected cell is invalid, it is highlighted in red.
      *
-     * @param row la fila de la celda seleccionada
-     * @param col la columna de la celda seleccionada
-     * @param color el color de fondo para resaltar
-     * @param isValid indica si la celda es válida o no (para aplicar el color de texto correspondiente)
+     * @param row the row of the selected cell
+     * @param col the column of the selected cell
+     * @param color the background color to apply to the block
+     * @param isValid whether the selected cell is valid
      */
     private void highlightBlock(int row, int col, String color, boolean isValid) {
         int blockStartRow = (row / 2) * 2;
@@ -217,10 +236,21 @@ public class SudokuController {
 
     }
 
+    /**
+     * Highlights the background and text color of a specific cell.
+     *
+     * @param txt the TextField representing the cell to highlight
+     * @param color the background color to apply to the cell
+     * @param textColor the color to apply to the text in the cell
+     */
     private void highlightField(TextField txt, String color, String textColor) {
         txt.setStyle("-fx-background-color: " + color + "; " + "-fx-text-fill: " + textColor + ";");
     }
 
+    /**
+     * Handles the hint/help functionality by displaying a suggested value in an empty cell.
+     * If no more hints are available, an appropriate message is shown.
+     */
     @FXML
     private void handleHelp(){
         Map<String, Integer> hintNum = model.help();
@@ -238,7 +268,7 @@ public class SudokuController {
     }
 
     /**
-     * Maneja la acción de deshacer.
+     * Handles the Undo action by undoing the last change and updating the view.
      */
     @FXML
     private void handleUndo() {
@@ -246,23 +276,30 @@ public class SudokuController {
     }
 
     /**
-     * Maneja la acción de rehacer.
+     * Handles the Redo action by redoing the previously undone change and updating the view.
      */
     @FXML
     private void handleRedo() {
         redo();
     }
-
+    /**
+     * Calls the Undo action by undoing the last change and updating the view.
+     */
     public void undo() {
         model.undo();
         refreshView();
     }
-
+    /**
+     * Calls the Redo action by redoing the last change and updating the view.
+     */
     public void redo() {
         model.redo();
         refreshView();
     }
 
+    /**
+     * Updates the Sudoku grid view to reflect the current state of the model.
+     */
     private void refreshView() {
         for (int row = 0; row < 6; row++) {
             for (int col = 0; col < 6; col++) {

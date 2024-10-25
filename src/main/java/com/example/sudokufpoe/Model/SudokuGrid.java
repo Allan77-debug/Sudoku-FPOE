@@ -39,6 +39,12 @@ public class SudokuGrid {
         actionQueue = new ActionQueue();
     }
 
+    /**
+     * Initializes a 6x6 matrix with all elements set to 0.
+     *
+     * @param matrix the matrix to initialize
+     * @return the initialized matrix
+     */
     private ArrayList<ArrayList<Integer>> initMatrix(ArrayList<ArrayList<Integer>> matrix) {
         for (int i = 0; i < 6; i++) {
             ArrayList<Integer> fila = new ArrayList<>();
@@ -165,6 +171,18 @@ public class SudokuGrid {
         }
     }
 
+    /**
+     * Provides assistance to the player by filling an empty cell with its correct value from the solution grid.
+     * This method finds an empty cell (value 0) within the current game grid, retrieves the correct value
+     * from the solution grid, places it in the game grid, and then returns the position and value of the cell.
+     * The player has a limited number of attempts to use this feature, which decrements each time the method is called.
+     *
+     * @return a map with the following key-value pairs:
+     *         - "row": the row index of the cell where help was provided
+     *         - "col": the column index of the cell where help was provided
+     *         - "value": the correct solution value placed in the cell
+     *         Returns null if there are no attempts left or if the grid has no empty cells.
+     */
     public Map<String, Integer> help() {
         if (helpAttemps <= 0) return null;
 
