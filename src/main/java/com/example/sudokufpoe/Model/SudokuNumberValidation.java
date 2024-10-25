@@ -63,12 +63,13 @@ public class SudokuNumberValidation {
      */
     public boolean isNumberInBlock(int row, int col, int number, ArrayList<ArrayList<Integer>> grid) {
         // Adjust to find the top-left corner of the 3x2 block
-        int blockRowStart = (row / 3) * 3;
-        int blockColStart = (col / 2) * 2;
+        int blockRowStart = (row / 2) * 2;
+        int blockColStart = (col / 3) * 3;
 
-        for (int indexRow = blockRowStart; indexRow < blockRowStart + 3; indexRow++) {
-            for (int indexCol = blockColStart; indexCol < blockColStart + 2; indexCol++) {
-                if (grid.get(indexRow).get(indexCol).equals(number)) {
+        for (int indexRow = blockRowStart; indexRow < blockRowStart + 2; indexRow++) {
+            for (int indexCol = blockColStart; indexCol < blockColStart + 3; indexCol++) {
+                if (grid.get(indexRow).get(indexCol).equals(number) && (indexCol != col || indexRow != row)) {
+                    System.out.println("col: " + indexCol + " row: " + indexRow);
                     return true;
                 }
             }
