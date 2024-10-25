@@ -1,21 +1,12 @@
 package com.example.sudokufpoe.Model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SudokuNumberValidation {
 
-    /**
-     * Checks if a number is valid for a given cell.
-     *
-     * @param row the row of the cell
-     * @param col the column of the cell
-     * @param number the number to check
-     * @return true if the number is valid, false otherwise
-     */
-    public boolean isValid(int row, int col, int number,ArrayList<Integer> grid) {
-        int index = row * 6 + col;
-        return isValidNumber(number) && isNumberInRow(row, number, grid) && isNumberInColumn(col, number, grid) && isNumberInBlock(index, number, grid);
-    }
+
 
     /**
      * Checks if a number is within the valid range (1-6).
@@ -32,94 +23,68 @@ public class SudokuNumberValidation {
      *
      * @param row the row to check
      * @param number the number to check
-     * @return the index of the other number in the row if the number is present, -1 otherwise
+     * @param grid the 6x6 grid to check
+     * @return true if the number is present in the row, false otherwise
      */
-    public int numberAlreadyInInRow(int row, int number,ArrayList<Integer> grid) {
-        for (int col = 0; col < 6; col++) {
-            int index = row * 6 + col;
-            if (grid.get(index) == number) return index;
-        }
-        return -1;
-    }
-
-    /**
-     * Checks if a number is already present in the specified row.
-     *
-     * @param row the row to check
-     * @param number the number to check
-     * @return true if the number is present, false otherwise
-     */
-    public boolean isNumberInRow(int row, int number,ArrayList<Integer> grid) {
-        return numberAlreadyInInRow(row, number, grid) != -1;
-    }
-
-    /**
-     * Checks if a number is already present in the specified column.
-     *
-     * @param col the column to check
-     * @param number the number to check
-     * @return the index of the other number in the column if the number is present, -1 otherwise
-     */
-    public int numberAlreadyInColumn(int col, int number,ArrayList<Integer> grid) {
-        for (int row = 0; row < 6; row++) {
-            int index = row * 6 + col;
-            if (grid.get(index).equals(number)) return index;
-        }
-        return -1;
-    }
-
-    /**
-     * Checks if a number is already present in the specified column.
-     *
-     * @param col the column to check
-     * @param number the number to check
-     * @return true if the number is present, false otherwise
-     */
-    public boolean isNumberInColumn(int col, int number,ArrayList<Integer> grid) {
-        return numberAlreadyInColumn(col, number, grid) != -1;
-    }
-
-    /**
-     * Checks if a number is already present in the 2x3 block containing the specified cell.
-     *
-     * @param index the index of the cell
-     * @param number the number to check
-     * @return the number index if the number is present, -1 otherwise
-     */
-    public int numberAlreadyInBlock(int index, int number, ArrayList<Integer> grid) {
-        int row = index / 6;
-        int col = index % 6;
-        int startRow = (row / 2) * 2;
-        int startCol = (col / 3) * 3;
-        for (int i = startRow; i < startRow + 2; i++) {
-            for (int j = startCol; j < startCol + 3; j++) {
-                int blockIndex = i * 6 + j;
-                if (grid.get(blockIndex).equals(number)) return blockIndex;
+    public boolean isNumberInRow(int row, int col,  int number, ArrayList<ArrayList<Integer>> grid) {
+        for (int indexCol = 0; indexCol < 6; indexCol++) {
+            if (grid.get(row).get(indexCol).equals(number) && indexCol != col) {
+                return true;
             }
         }
-        return -1;
+        return false;
     }
 
+    /**
+     * Checks if a number is already present in the specified column.
+     *
+     * @param col the column to check
+     * @param number the number to check
+     * @param grid the 6x6 grid to check
+     * @return true if the number is present in the column, false otherwise
+     */
+    public boolean isNumberInColumn(int row, int col, int number, ArrayList<ArrayList<Integer>> grid) {
+        for (int indexRow = 0; indexRow < 6; indexRow++) {
+            if (grid.get(indexRow).get(col).equals(number) && indexRow != row) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
-     * Checks if a number is already present in the 2x3 block containing the specified cell.
+     * Checks if a number is already present in the specified 3x2 block.
      *
-     * @param index the index of the cell
+     * @param row the starting row of the block
+     * @param col the starting column of the block
      * @param number the number to check
-     * @return true if the number is present, false otherwise
+     * @param grid the 6x6 grid to check
+     * @return true if the number is present in the 3x2 block, false otherwise
      */
-    public boolean isNumberInBlock(int index, int number, ArrayList<Integer> grid) {
-        return numberAlreadyInBlock(index, number, grid) != -1;
+    public boolean isNumberInBlock(int row, int col, int number, ArrayList<ArrayList<Integer>> grid) {
+        // Adjust to find the top-left corner of the 3x2 block
+        int blockRowStart = (row / 3) * 3;
+        int blockColStart = (col / 2) * 2;
+
+        for (int indexRow = blockRowStart; indexRow < blockRowStart + 3; indexRow++) {
+            for (int indexCol = blockColStart; indexCol < blockColStart + 2; indexCol++) {
+                if (grid.get(indexRow).get(indexCol).equals(number)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 
     /**
      * Checks if a cell is not empty.
      *
-     * @param index the index of the cell
+     * @param row of the cell
+     * @param col of the cell
      * @return true if the cell is not empty, false otherwise
      */
-    public boolean isCellNotEmpty(int index, ArrayList<Integer> grid) {
-        return grid.get(index) != 0;
+    public boolean isCellNotEmpty(int row, int col, ArrayList<ArrayList<Integer>> grid) {
+        return grid.get(row).get(col) != 0;
     }
 }

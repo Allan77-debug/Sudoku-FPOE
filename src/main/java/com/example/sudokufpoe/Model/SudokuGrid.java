@@ -3,17 +3,13 @@ package com.example.sudokufpoe.Model;
 import com.example.sudokufpoe.Util.InputValidator;
 import javafx.scene.control.TextField;
 
-import java.util.Queue;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Represents a Sudoku grid with undo and redo functionality.
  */
 public class SudokuGrid {
-    private final ArrayList<Integer> grid; // Reemplazamos la matriz con ArrayList
-    private final ArrayList<ArrayList<Integer>> matriz;
+    private final ArrayList<ArrayList<Integer>> grid;
     private final ArrayList<ArrayList<Integer>> solution;
     private final Deque<CellAction> undoStack;
     private final Deque<CellAction> redoStack;
@@ -25,21 +21,20 @@ public class SudokuGrid {
      */
     public SudokuGrid() {
         grid = new ArrayList<>();
-        matriz = new ArrayList<>();
         solution = new ArrayList<>();
+        SudokuNumberGenerator numberGenerator = new SudokuNumberGenerator();
 
-        initMatrix(matriz);
+        initMatrix(grid);
         initMatrix(solution);
 
-        printGrid(matriz);
+
+        numberGenerator.generateSudokuSolution(solution);
+        numberGenerator.fillEmptyMatrixWithTwoNumbersPerBlock(solution, grid);
+
+        printGrid(grid);
         printGrid(solution);
 
-        SudokuNumberGenerator numberGenerator = new SudokuNumberGenerator();
         numberValidator =  new SudokuNumberValidation();
-        for (int i = 0; i < 36; i++) {
-            grid.add(0);
-        }
-        numberGenerator.generateValidNumbers(grid);
 
         undoStack = new LinkedList<>();
         redoStack = new LinkedList<>();
@@ -85,9 +80,26 @@ public class SudokuGrid {
      * @return true if the number is valid, false otherwise
      */
     public boolean isValid(int row, int col, int number) {
-        int index = row * 6 + col;
-        System.out.println("isValid func, isValid:  " + numberValidator.isValidNumber(number) + " in row: " + !numberValidator.isNumberInRow(row, number, grid) + " in Col: " + !numberValidator.isNumberInColumn(col, number, grid) + " in block: " + !numberValidator.isNumberInBlock(index, number, grid));
-        return (numberValidator.isValidNumber(number) && !numberValidator.isNumberInRow(row, number, grid) && !numberValidator.isNumberInColumn(col, number, grid) && !numberValidator.isNumberInBlock(index, number, grid));
+        return (numberValidator.isValidNumber(number) && !numberValidator.isNumberInRow(row, col, number, grid) && !numberValidator.isNumberInColumn(row, col, number, grid) && !numberValidator.isNumberInBlock(row, col, number, grid));
+    }
+
+    /**
+     * Checks if a number is valid for a given cell.
+     *
+     * @param row the row of the cell
+     * @param col the column of the cell
+     * @param number the number to check
+     * @return result print dictionary with the valid ´position in the grid
+     */
+    public Map<String, Boolean> isValidDictionary(int row, int col, int number) {
+        Map<String, Boolean> result = new HashMap<>();
+
+        result.put("isValidNumber", numberValidator.isValidNumber(number));
+        result.put("isNumberInRow", numberValidator.isNumberInRow(row, col, number, grid));
+        result.put("isNumberInColumn", numberValidator.isNumberInColumn(row, col, number, grid));
+        result.put("isNumberInBlock", numberValidator.isNumberInBlock(row,col, number, grid));
+
+        return result;
     }
 
     /**
@@ -99,29 +111,14 @@ public class SudokuGrid {
      */
     public void setNumber(int row, int col, int number) {
         int index = row * 6 + col;
-        boolean isValid = isValid(row,col, number);
-        System.out.println("Is valid "+  isValid);
         if (numberValidator.isValidNumber(number) && isValid(row, col, number)) {
             savePreviousAction(index);
             resetRedoStack();
-            updateGrid(index, number);
+            updateGrid(row, col, number);
             logAction("Ingresado " + number + " en [" + row + "," + col + "]");
         } else {
             InputValidator.handleInvalidInput(String.valueOf(number));
         }
-    }
-
-    public int getCellConflictIndex(int row, int col, int number){
-        int index = row * 6 + col;
-        int conflictInTheSameBlock = numberValidator.numberAlreadyInBlock(index,number, grid);
-        int conflictInTheColumn = numberValidator.numberAlreadyInBlock(index,number, grid);
-        int conflictInTheRow = numberValidator.numberAlreadyInBlock(index,number, grid);
-
-        System.out.println("same block: "+conflictInTheSameBlock + " col: " + conflictInTheColumn +  " row: " + conflictInTheRow);
-
-        if(conflictInTheSameBlock != -1) return conflictInTheSameBlock;
-        if(conflictInTheColumn != -1) return conflictInTheColumn;
-        return conflictInTheRow;
     }
 
     /**
@@ -130,17 +127,18 @@ public class SudokuGrid {
      * @param index the index of the cell
      */
     private void savePreviousAction(int index) {
-        undoStack.push(new CellAction(index, grid.get(index)));
+        //undoStack.push(new CellAction(index, grid.get(index)));
     }
 
     /**
      * Updates the grid with the specified number.
      *
-     * @param index the index of the cell
+     * @param row the row of the cell
+     * @param col the row of the cell
      * @param number the number to set
      */
-    private void updateGrid(int index, int number) {
-        grid.set(index, number);
+    private void updateGrid(int row, int col, int number) {
+        grid.get(row).set(col, number);
     }
 
     /**
@@ -176,13 +174,14 @@ public class SudokuGrid {
         }
     }
 
+
     /**
      * Saves the current state for redo functionality.
      *
      * @param action the action to save
      */
     private void saveRedoAction(CellAction action) {
-        redoStack.push(new CellAction(action.index, grid.get(action.index)));
+        //redoStack.push(new CellAction(action.index, grid.get(action.index)));
     }
 
     /**
@@ -191,7 +190,7 @@ public class SudokuGrid {
      * @param action the action to restore
      */
     private void restorePreviousState(CellAction action) {
-        grid.set(action.index, action.previousNumber);
+        //grid.set(action.index, action.previousNumber);
     }
 
     /**
@@ -211,7 +210,7 @@ public class SudokuGrid {
      * @param action the action to save
      */
     private void saveUndoAction(CellAction action) {
-        undoStack.push(new CellAction(action.index, grid.get(action.index)));
+        //undoStack.push(new CellAction(action.index, grid.get(action.index)));
     }
 
     /**
@@ -220,14 +219,14 @@ public class SudokuGrid {
      * @param action the action to restore
      */
     private void restoreRedoState(CellAction action) {
-        grid.set(action.index, action.previousNumber);
+        // grid.set(action.index, action.previousNumber);
     }
 
     /**
      * Prints the current state of the Sudoku grid to the console in a formatted way.
      */
     public void printGrid(ArrayList<ArrayList<Integer>> matrix) {
-        System.out.println("Matriz formateada:");
+
         for (ArrayList<Integer> fila : matrix) {
             System.out.print("| ");
             for (Integer elemento : fila) {
@@ -257,8 +256,7 @@ public class SudokuGrid {
      * @return the number in the cell
      */
     public int getNumber(int row, int col) {
-        int index = row * 6 + col;
-        return grid.get(index);
+        return grid.get(row).get(col);
     }
 
     /**
@@ -269,10 +267,10 @@ public class SudokuGrid {
      */
     public void clearNumber(int row, int col) {
         int index = row * 6 + col;
-        if (numberValidator.isCellNotEmpty(index, grid)) {
+        if (numberValidator.isCellNotEmpty(row, col, grid)) {
             savePreviousAction(index);
             resetRedoStack();
-            clearGridCell(index);
+            clearGridCell(row, col);
             logClearAction(row, col);
         }
     }
@@ -281,10 +279,11 @@ public class SudokuGrid {
     /**
      * Clears the specified cell in the grid.
      *
-     * @param index the index of the cell
+     * @param row the row fo the cell to set
+     * @param col the col fo the cell to set
      */
-    private void clearGridCell(int index) {
-        grid.set(index, 0);
+    private void clearGridCell(int row, int col) {
+        grid.get(row).set(col, 0);
     }
 
     /**
