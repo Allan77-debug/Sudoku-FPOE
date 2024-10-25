@@ -3,6 +3,7 @@ package com.example.sudokufpoe.Controller;
 import com.example.sudokufpoe.Model.SudokuNumberGenerator;
 import com.example.sudokufpoe.Model.SudokuGrid;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -133,9 +134,19 @@ public class SudokuController {
             int number = Integer.parseInt(newValue);
 
             updateModelAndView(row, col,number);
+
+            if (model.isGameComplete()) {
+                showWinAlert();
+            }
         });
     }
-
+    private void showWinAlert() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("¡Felicidades!");
+        alert.setHeaderText(null);
+        alert.setContentText("¡Has completado el Sudoku correctamente!");
+        alert.showAndWait();
+    }
     /**
      * Limpia la entrada de texto.
      *

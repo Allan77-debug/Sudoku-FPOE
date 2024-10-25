@@ -32,6 +32,8 @@ public class SudokuGrid {
         numberGenerator.generateSudokuSolution(solution);
         numberGenerator.fillEmptyMatrixWithTwoNumbersPerBlock(solution, grid);
 
+        printGrid(solution);
+
         numberValidator =  new SudokuNumberValidation();
 
         undoStack = new LinkedList<>();
@@ -55,6 +57,17 @@ public class SudokuGrid {
         }
 
         return matrix;
+    }
+
+    public boolean isGameComplete() {
+        for (int row = 0; row < 6; row++) {
+            for (int col = 0; col < 6; col++) {
+                if (grid.get(row).get(col) == 0 || !grid.get(row).get(col).equals(solution.get(row).get(col))) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -116,7 +129,6 @@ public class SudokuGrid {
      * @param number the number to set
      */
     public void setNumber(int row, int col, int number) {
-        int index = row * 6 + col;
         if (numberValidator.isValidNumber(number) && isValid(row, col, number)) {
             savePreviousAction(row, col);
             resetRedoStack();
