@@ -156,6 +156,14 @@ public class SudokuController {
         if(!isValid) highlightPathBetweenCells(row, col, isValidMap.get("isNumberInRow"), isValidMap.get("isNumberInColumn"));
 
         cell.setText(String.valueOf(number));
+        printUndoLog();
+    }
+
+    public void printUndoLog() {
+        Queue<String> actionHistory = model.getActionHistory();
+        for (String action : actionHistory) {
+            System.out.println(action);
+        }
     }
 
     /**
