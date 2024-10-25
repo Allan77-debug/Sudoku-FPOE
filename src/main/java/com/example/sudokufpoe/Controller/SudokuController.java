@@ -107,6 +107,7 @@ public class SudokuController {
                 int number = model.getNumber(row, col);
                 if (number != 0) {
                     cellGrid.get(row).get(col).setText(String.valueOf(number));
+                    cellGrid.get(row).get(col).setEditable(false);
                 }
             }
         }
@@ -120,12 +121,14 @@ public class SudokuController {
      */
     private void addTextChangeListener(TextField txt, int row, int col) {
         txt.textProperty().addListener((observable, oldValue, newValue) -> {
-            // Allow only valid letters and revert to oldValue if the input is invalid
             highlightRow(row, col, "white", true);
             highlightCol(row, col,"white", true);
             highlightBlock(row, col, "white", true);
+
             if(!newValue.matches("[1-6]")) return;
+
             int number = Integer.parseInt(newValue);
+
             updateModelAndView(row, col,number);
         });
     }

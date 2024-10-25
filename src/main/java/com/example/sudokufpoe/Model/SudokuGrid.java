@@ -31,9 +31,6 @@ public class SudokuGrid {
         numberGenerator.generateSudokuSolution(solution);
         numberGenerator.fillEmptyMatrixWithTwoNumbersPerBlock(solution, grid);
 
-        printGrid(grid);
-        printGrid(solution);
-
         numberValidator =  new SudokuNumberValidation();
 
         undoStack = new LinkedList<>();
