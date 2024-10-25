@@ -69,6 +69,17 @@ public class SudokuGrid {
         }
     }
 
+    public boolean isGameComplete() {
+        for (int row = 0; row < 6; row++) {
+            for (int col = 0; col < 6; col++) {
+                if (grid.get(row).get(col) == 0 || !grid.get(row).get(col).equals(solution.get(row).get(col))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     /**
      * Checks if a number is valid for a given cell.
      *
